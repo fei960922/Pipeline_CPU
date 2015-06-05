@@ -75,17 +75,11 @@ This project is a final project of Computer System (1) by Xiaoyao Liang in Sprin
 
 ## Reference
 
-<Computer Principles and Design in Verilog HDL>
+Computer Principles and Design in Verilog HDL  [Download](http://vdisk.weibo.com/s/z4a2gWe6ECIsn)
 
-[Download](http://vdisk.weibo.com/s/z4a2gWe6ECIsn)
+Computer Architecture Experiment Instruction (LAB1-6)  (Download: Restricted)
 
-<Computer Architecture Experiment Instruction (LAB1-6)>
-
-Download: Restricted.
-
-<Verilog for Ditigal Circuits>
-
-[Download](http://www.cs.sjtu.edu.cn/~liang-xy/ms108/Verilog%20for%20Ditigal%20Circuits.pdf)
+Verilog for Ditigal Circuits  [Download](http://www.cs.sjtu.edu.cn/~liang-xy/ms108/Verilog%20for%20Ditigal%20Circuits.pdf)
 
 Thanks to: Many Guys.
 
