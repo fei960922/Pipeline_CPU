@@ -43,9 +43,7 @@ This project is a final project of Computer System (1) by Xiaoyao Liang in Sprin
 	- 2015.06.01 	Project Started.
 	- 2015.06.03 	Reference reading.
 	- 2015.06.05 	Repository established.
-
->>>>>>>>>>>>>>> Predicted >>>>>>>>>>>>>>>>
-
+	>>>>>>>>>>>>>>> Predicted >>>>>>>>>>>>>>>>
 	- 2015.06.07	Basic Version release.
 	- 2015.06.14 	Version Alpha release.
 	- 2015.06.16	Version Beta release.
@@ -77,17 +75,17 @@ This project is a final project of Computer System (1) by Xiaoyao Liang in Sprin
 
 ## Reference
 
-	<Computer Principles and Design in Verilog HDL>
+<Computer Principles and Design in Verilog HDL>
 
-	[Download](http://vdisk.weibo.com/s/z4a2gWe6ECIsn)
+[Download](http://vdisk.weibo.com/s/z4a2gWe6ECIsn)
 
-	<Computer Architecture Experiment Instruction (LAB1-6)>
+<Computer Architecture Experiment Instruction (LAB1-6)>
 
-	Download: Restricted.
+Download: Restricted.
 
-	<Verilog for Ditigal Circuits>
+<Verilog for Ditigal Circuits>
 
-	[Download](http://www.cs.sjtu.edu.cn/~liang-xy/ms108/Verilog%20for%20Ditigal%20Circuits.pdf)
+[Download](http://www.cs.sjtu.edu.cn/~liang-xy/ms108/Verilog%20for%20Ditigal%20Circuits.pdf)
 
-	Thanks to: Many Guys.
+Thanks to: Many Guys.
 
