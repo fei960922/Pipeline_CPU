@@ -56,6 +56,7 @@ This project is a final project of Computer System (1) by Xiaoyao Liang in Sprin
 
 	- top level
 		- pipeline.v
+		- final_test.v
 	- stage level
 		- stage_if.v
 		- stage_id.v
