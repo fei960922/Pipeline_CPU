@@ -19,17 +19,17 @@
 */
 
 
-module stage_if (pc_select, pc, pc_b, pc_r, pc_j, pc_next, pc_add4, instr); 
+module stage_if (pc_select, pc, pc_b, pc_r, pc_j, pc_next, pc4, instr); 
 
 	input	[31:0] 	pc, pc_b, pc_r, pc_j; 
 	input	[1:0]	pc_select;
 
-	output	[31:0]	pc_next, pc_add4, instr;
+	output	[31:0]	pc_next, pc4, instr;
 
-	assign 	pc_add4 = pc + 4;
+	assign 	pc4 = pc + 4;
 	assign 	instr = fetch_instr_mem(pc);
 
-	select_4 s4 (pc_add4, pc_b, pc_r, pc_j, pc_select, pc_next);
+	select_4 s4 (pc4, pc_b, pc_r, pc_j, pc_select, pc_next);
 
 	function [31:0] fetch_instr_mem;
 

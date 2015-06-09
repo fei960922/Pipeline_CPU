@@ -17,7 +17,7 @@
 		
 */
 
-module stage_ex (clock, reset_0, a_ex, b_ex, imm_ex, pc_ex, ); 
+module stage_ex (op_ex, aluimm_ex, a_ex, b_ex, imm_ex, shift_ex, rw_in, pc4_ex, jal_ex, rw_ex, ans_ex);
 
 	input	[31:0]	a_ex, b_ex, imm_ex, pc_ex;
 	input 	[4:0]	rw_in;
@@ -26,7 +26,6 @@ module stage_ex (clock, reset_0, a_ex, b_ex, imm_ex, pc_ex, );
 
 	output	[31:0]	ans_ex;
 	output	[4:0]	rw_ex;
-
 	wire	[31:0]	a_calc, b_calc, alu;
 
 	assign a_calc = shift_ex	? a_ex : {imm_ex[5:0],imm_ex[31:6]}; //???
@@ -41,9 +40,7 @@ module stage_ex_alu	(a, b, op, ans);
 
 	input	[31:0]	a, b;
 	input	[3:0]	op;
-
 	output	[31:0]	ans;
-
 	wire	[31:0]	op_1, op_2, op_3;
 
 	always @* begin

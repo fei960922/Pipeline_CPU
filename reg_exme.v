@@ -17,13 +17,13 @@
 		
 */
 
-module reg_idex (clock, reset_0, enable, ans_ex, b_ex, rw_ex, wreg_ex, m2reg_ex, wmem_ex
-										 ans_me, b_me, rw_me, wreg_me, m2reg_me, wmem_me); 
+module reg_idex (clock, reset_0, ans_ex, b_ex, rw_ex, wreg_ex, m2reg_ex, wmem_ex
+								 ans_me, b_me, rw_me, wreg_me, m2reg_me, wmem_me); 
 
 	input	[31:0]	ans_ex, b_ex;
 	input 	[4:0]	rw_ex;
 	input	wreg_ex, m2reg_ex, wmem_ex;
-	input	clock, reset_0, enable;
+	input	clock, reset_0;
 
 	output	[31:0]	ans_me, b_me;
 	output 	[4:0]	rw_me;

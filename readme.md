@@ -22,7 +22,7 @@ This CPU support the following MIPS code:
 	- bne
 	......(undecided)
 
-This CPU is written in Verilog HDL and will be simulated with ModelSim 10.2 Student Edition.
+This CPU is written in Verilog HDL and will be simulated with ModelSim 10.4a Student Edition.
 
 This project is a final project of Computer System (1) by Xiaoyao Liang in Spring 2015.
 

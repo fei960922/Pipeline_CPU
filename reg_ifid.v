@@ -17,14 +17,14 @@
 		
 */
 
-module reg_ifid (clock, reset_0, enable, pc_if, instr_if, pc_id, instr_id); 
+module reg_ifid (clock, reset_0, enable, pc4_if, instr_if, pc4_id, instr_id); 
 
-	input	[31:0]	pc_if, instr_if; 
+	input	[31:0]	pc4_if, instr_if; 
 	input	clock, reset_0, enable;
 
-	output	[31:0]	pc_id, instr_id;
+	output	[31:0]	pc4_id, instr_id;
 
-	reg_cell a (clock, reset_0, enable, pc_if, pc_id);
+	reg_cell a (clock, reset_0, enable, pc4_if, pc4_id);
 	reg_cell b (clock, reset_0, enable, instr_if, instr_id);
 
 
