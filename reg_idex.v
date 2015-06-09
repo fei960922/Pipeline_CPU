@@ -31,6 +31,11 @@ module reg_idex (clock, reset_0, a_id, b_id, imm_id, pc_id, rw_id, op_id, wreg_i
 	output	[3:0]	op_ex;
 	output	wreg_ex, m2reg_ex, wmem_ex, aluimm_ex, shift_ex, jal_ex;
 
+	reg 	[31:0]	a_ex, b_ex, imm_ex, pc_ex;
+	reg  	[4:0]	rw_ex;
+	reg 	[3:0]	op_ex;
+	reg 	wreg_ex, m2reg_ex, wmem_ex, aluimm_ex, shift_ex, jal_ex;
+
 	always @(negedge reset_0 or posedge clock)
 		if (reset_0 == 0) begin
 			a_ex <= 0;

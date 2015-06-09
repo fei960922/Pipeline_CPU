@@ -31,13 +31,6 @@ module stage_if (pc_select, pc, pc_b, pc_r, pc_j, pc_next, pc4, instr);
 
 	select_4 s4 (pc4, pc_b, pc_r, pc_j, pc_select, pc_next);
 
-	function [31:0] fetch_instr_mem;
-
-		input [31:0] pc;
-		// Writing...
-		
-		// fetch the instruction from the memory.
-
-	endfunciton
+	// Reading icache.
 
 endmodule

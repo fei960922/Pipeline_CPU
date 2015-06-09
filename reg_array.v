@@ -26,13 +26,13 @@ module reg_array (clock, reset_0, enable, addr_a, addr_b, addr_w, data_w, data_a
 
 	output	[31:0]	data_a, data_b;
 	reg 	[31:0]	data[0:31];
+	integer i;
 
 	assign 	data_a = data[addr_a];
 	assign 	data_b = data[addr_b];
 
 	always @(negedge reset_0 or posedge clock)
 		if (reset_0 == 0) begin
-			integer i;
 			for (i=0;i<32;i=i+1)
 				data[i] <= 0;
 		end else if (enable)

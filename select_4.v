@@ -23,6 +23,7 @@ module select_4 (data_1, data_2, data_3, data_4, selector, data_w);
 	input 	[31:0]	data_1, data_2, data_3, data_4;
 	input 	[1:0]	selector;
 	output	[31:0]	data_w;
+	reg 	[31:0]	data_w;
 
 	always @(data_1 or data_2 or data_3 or data_4 or selector)
 		case (selector) 

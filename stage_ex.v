@@ -19,7 +19,7 @@
 
 module stage_ex (op_ex, aluimm_ex, a_ex, b_ex, imm_ex, shift_ex, rw_in, pc4_ex, jal_ex, rw_ex, ans_ex);
 
-	input	[31:0]	a_ex, b_ex, imm_ex, pc_ex;
+	input	[31:0]	a_ex, b_ex, imm_ex, pc4_ex;
 	input 	[4:0]	rw_in;
 	input	[3:0]	op_ex;
 	input	aluimm_ex, shift_ex, jal_ex;
@@ -31,7 +31,7 @@ module stage_ex (op_ex, aluimm_ex, a_ex, b_ex, imm_ex, shift_ex, rw_in, pc4_ex, 
 	assign a_calc = shift_ex	? a_ex : {imm_ex[5:0],imm_ex[31:6]}; //???
 	assign b_calc = aluimm_ex	? b_ex : imm_ex;
 	stage_ex_alu au (a_calc, b_calc, op_in, alu);
-	assign ans_ex = jal_ex		? alu  : (pc_ex + 4);
+	assign ans_ex = jal_ex		? alu  : (pc4_ex + 4);
 	assign rw_ex = rw_in | {5{jal_ex}};
 
 endmodule
@@ -41,7 +41,8 @@ module stage_ex_alu	(a, b, op, ans);
 	input	[31:0]	a, b;
 	input	[3:0]	op;
 	output	[31:0]	ans;
-	wire	[31:0]	op_1, op_2, op_3;
+	wire	[31:0]	op_1, op_2;
+	reg		[31:0]	op_3;
 
 	always @* begin
 		if (!op[3]) begin
