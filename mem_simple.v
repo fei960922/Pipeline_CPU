@@ -28,12 +28,12 @@ module mem_simple(clock_me, pc, wmem, in, out);
 	assign out = memorys[pc >> 2];
 
 	always @(posedge clock_me)
-		if (enable)
+		if (wmem)
 			memorys[pc] <= in;
 
 	// For simulate only.
 	initial begin
-		memorys[0] = 
+		memorys[0] = 0;
 	end
 
 endmodule

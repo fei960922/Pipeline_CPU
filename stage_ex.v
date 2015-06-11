@@ -30,7 +30,7 @@ module stage_ex (op_ex, aluimm_ex, a_ex, b_ex, imm_ex, shift_ex, rw_in, pc4_ex, 
 
 	assign a_calc = shift_ex	? a_ex : {imm_ex[5:0],imm_ex[31:6]}; //???
 	assign b_calc = aluimm_ex	? b_ex : imm_ex;
-	stage_ex_alu au (a_calc, b_calc, op_in, alu);
+	stage_ex_alu au (a_calc, b_calc, op_ex, alu);
 	assign ans_ex = jal_ex		? alu  : (pc4_ex + 4);
 	assign rw_ex = rw_in | {5{jal_ex}};
 

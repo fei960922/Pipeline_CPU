@@ -50,10 +50,10 @@ module pipeline (clock, clock_me, reset_0, pc, instr_id, ans_ex, ans_me, ans_wb)
 	wire 	stall; 
 
 	// IF
-	reg_cell	a 	(clock, reset_0, pc_next, stall, pc);
+	reg_cell	a 	(clock, reset_0, stall, pc_next, pc);
 	stage_if	b 	(clock_me, pc_select, pc, pc_b, a_id, pc_j, pc_next, pc4_if, instr_if);
 	// ID
-	reg_ifid	c 	(clock, reset_0, pc4_if, instr_if, stall, pc4_id, instr_id);
+	reg_ifid	c 	(clock, reset_0, stall, pc4_if, instr_if, pc4_id, instr_id);
 	stage_id	d 	(clock, reset_0, pc4_id, instr_id, data_w, ans_ex, ans_me, mo_me,
 						rw_ex, rw_me, rw_wb, wreg_ex, wreg_me, wreg_wb, m2reg_ex, m2reg_me,
 						pc_b, pc_j, a_id, b_id, imm_id, rw_id, op_id, pc_select, 

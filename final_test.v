@@ -19,7 +19,7 @@
 module final_test;
 
 	reg 	clock, clock_me, reset_0;
-	reg 	[31:0]	pc, instr_id, ans_ex, ans_me, ans_wb;
+	wire 	[31:0]	pc, instr_id, ans_ex, ans_me, ans_wb;
 	reg 	[7:0] 	reg1;
 	integer file;
 
@@ -37,7 +37,7 @@ module final_test;
 	initial begin
 		file = $fopen("data.txt", "r");
 		while (!$feof(file)) begin
-			$fscanf(fp_r, "%d", reg1);
+			$fscanf(file, "%d", reg1);
  	     	$display("%d", reg1);
 		end
 		$fclose(file);

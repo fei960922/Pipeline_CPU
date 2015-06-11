@@ -23,6 +23,6 @@ module stage_me (clock, clock_me, wmem_me, addr, in_me, mo_me);
 	input	wmem_me, clock, clock_me;
 	output	[31:0]	mo_me;
 
-	mem_fetch m (clock_me, addr, wmem_me, in_me, mo_me);
+	mem_simple m (clock_me, addr, wmem_me, in_me, mo_me);
 
 endmodule

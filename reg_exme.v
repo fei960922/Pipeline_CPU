@@ -17,7 +17,7 @@
 		
 */
 
-module reg_idex (clock, reset_0, ans_ex, b_ex, rw_ex, wreg_ex, m2reg_ex, wmem_ex,
+module reg_exme (clock, reset_0, ans_ex, b_ex, rw_ex, wreg_ex, m2reg_ex, wmem_ex,
 								 ans_me, b_me, rw_me, wreg_me, m2reg_me, wmem_me); 
 
 	input	[31:0]	ans_ex, b_ex;
