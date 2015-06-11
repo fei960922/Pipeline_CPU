@@ -19,18 +19,18 @@
 */
 
 
-module stage_if (pc_select, pc, pc_b, pc_r, pc_j, pc_next, pc4, instr); 
+module stage_if (clock_me, pc_select, pc, pc_b, pc_r, pc_j, pc_next, pc4, instr); 
 
 	input	[31:0] 	pc, pc_b, pc_r, pc_j; 
 	input	[1:0]	pc_select;
+	input 	clock_me;
 
 	output	[31:0]	pc_next, pc4, instr;
 
 	assign 	pc4 = pc + 4;
-	assign 	instr = fetch_instr_mem(pc);
-
+	
 	select_4 s4 (pc4, pc_b, pc_r, pc_j, pc_select, pc_next);
 
-	// Reading icache.
+	mem_fetch m (clock_me, pc, 1'b0, pc, instr);
 
 endmodule

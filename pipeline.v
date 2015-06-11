@@ -14,6 +14,22 @@
 
 	Version:
         0.1     2015/6/5    Struct established;
+
+    Note: 
+    	reg_name is named as follow:
+    		name_x:
+    			x = if / id / ex / me / wb
+    			which represent using in each stage. (only few of them used transitive)
+    	name :
+			wreg: Writing Register or not;
+			regrt	
+
+    	Special name:
+    		clock: 		CPU clock;
+    		clock_me:	Memory clock;
+    		reset_0:	To reset CPU with all reg.;
+    		pc
+
 		
 */
 
@@ -35,7 +51,7 @@ module pipeline (clock, clock_me, reset_0, pc, instr_id, ans_ex, ans_me, ans_wb)
 
 	// IF
 	reg_cell	a 	(clock, reset_0, pc_next, stall, pc);
-	stage_if	b 	(pc_select, pc, pc_b, a_id, pc_j, pc_next, pc4_if, instr_if);
+	stage_if	b 	(clock_me, pc_select, pc, pc_b, a_id, pc_j, pc_next, pc4_if, instr_if);
 	// ID
 	reg_ifid	c 	(clock, reset_0, pc4_if, instr_if, stall, pc4_id, instr_id);
 	stage_id	d 	(clock, reset_0, pc4_id, instr_id, data_w, ans_ex, ans_me, mo_me,
@@ -45,11 +61,11 @@ module pipeline (clock, clock_me, reset_0, pc, instr_id, ans_ex, ans_me, ans_wb)
 	// EX
 	reg_idex	e 	(clock, reset_0, a_id, b_id, imm_id, pc4_id, rw_id, op_id, wreg_id, m2reg_id, wmem_id, aluimm_id, shift_id, jal_id,
 								 	 a_ex, b_ex, imm_ex, pc4_ex, rw_in, op_ex, wreg_ex, m2reg_ex, wmem_ex, aluimm_ex, shift_ex, jal_ex);
-	stage_exe	f 	(op_ex, aluimm_ex, a_ex, b_ex, imm_ex, shift_ex, rw_in, pc4_ex, jal_ex, rw_ex, ans_ex);
+	stage_ex	f 	(op_ex, aluimm_ex, a_ex, b_ex, imm_ex, shift_ex, rw_in, pc4_ex, jal_ex, rw_ex, ans_ex);
 	// ME
 	reg_exme 	g 	(clock, reset_0, ans_ex, b_ex, rw_ex, wreg_ex, m2reg_ex, wmem_ex,
 								 	 ans_me, b_me, rw_me, wreg_me, m2reg_me, wmem_me); 
-	stage_mem	h 	(clock, clock_me, wmem_me, ans_me, b_me, mo_me);
+	stage_me	h 	(clock, clock_me, wmem_me, ans_me, b_me, mo_me);
 	// WB
 	reg_mewb 	i 	(clock, reset_0, ans_me, rw_me, wreg_me, m2reg_me, mo_me,
 									 ans_wb, rw_wb, wreg_wb, m2reg_wb, mo_wb);

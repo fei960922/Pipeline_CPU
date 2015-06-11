@@ -58,4 +58,20 @@ module stage_ex_alu	(a, b, op, ans);
 	select_4 o2(a&b, a|b, a^b, {b[15:0],16'h0}, op[3:2], op_2);
 	select_4 o5(op_1, op_2, op_3, a, op[1:0], ans);
 
+	/*
+		This table is defined in stage_id.v
+
+		ADD 0000;
+		SUB 0100;
+		MUL 1000;
+		DIV 1100;
+		AND 0001;
+		OR	0101;
+		XOR	1001;
+		??? 1101;
+		SLL	0010;
+		SRL 1110;
+		SRA 1010;
+	*/
+
 endmodule
