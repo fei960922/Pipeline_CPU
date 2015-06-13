@@ -24,6 +24,7 @@ module mem_simple(clock_me, pc, wmem, in, out);
 	output	[31:0]	out;
 
 	reg 	[31:0]	memorys[0:1024];
+	integer i, file, file_mips;
 
 	assign out = memorys[pc >> 2];
 
@@ -33,7 +34,29 @@ module mem_simple(clock_me, pc, wmem, in, out);
 
 	// For simulate only.
 	initial begin
-		memorys[0] = 0;
+		file = $fopen("C:/Programming/ModelSim/examples/Pipeline_CPU/data.txt", "r");
+		file_mips = $fopen("C:/Programming/ModelSim/examples/Pipeline_CPU/mips.txt", "r");
+		for (i = 0; i < 100; i = i + 1) begin
+			memorys[i] = 0;
+		end
+		i = 100;
+		while (!$feof(file)) begin
+			$fscanf(file, "%d", memorys[i]);
+			i = i + 1;
+		end
+		$display("Data load : %d lines", i - 100);
+		i = 0;
+		while (!$feof(file_mips)) begin
+			$fscanf(file_mips, "%b", memorys[i]);
+			i = i + 1;
+			if (i>100) begin
+				$display("Instruction number outbound! (>100 lines is not supported)");
+			end
+		end
+		$display("Instruction load : %d lines", i);
+		
+		$fclose(file);
+		$fclose(file_mips);
 	end
 
 endmodule
