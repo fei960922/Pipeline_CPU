@@ -60,7 +60,7 @@ module stage_id (clock, reset_0, pc4_id, instr_id, data_w, ans_ex, ans_me, mo_me
 
 	assign pc_j = {pc4_id[31:28], instr_id[25:0], 2'b00};
 	assign rw_id = rw_select?rt:rd;
-	assign equal = ~|(a_id^b_id);	
+	assign equal = a_id==b_id; //~|(a_id^b_id);	
 	assign imm_id = {{16{sext & instr_id[15]}}, instr_id[15:0]};	
 	assign br = {imm_id[29:0], 2'b00};
 	assign pc_b = pc4_id + br;
@@ -73,31 +73,31 @@ module stage_id (clock, reset_0, pc4_id, instr_id, data_w, ans_ex, ans_me, mo_me
 	select_4 alu_b	(data_b, ans_ex, ans_me, mo_me, b_select, b_id);
 	stage_id_ex ex  (clock, wreg_me, rw_me, rw_ex, wreg_ex, m2reg_ex, m2reg_me, equal, func,
 					op, rs, rt, wreg_id, m2reg_id, wmem_id, op_id, rw_select, aluimm_id,
-					a_select, b_select, stall, sext, pc_select, shift_id, jal_id);
+					a_select, b_select, stall, sext, shift_id, jal_id);
 
 endmodule
 
 module stage_id_ex	(clock, wreg_me, rw_me, rw_ex, wreg_ex, m2reg_ex, m2reg_me, equal, func,
 					op, rs, rt, wreg_id, m2reg_id, wmem_id, op_id, rw_select, aluimm_id,
-					a_select, b_select, stall, sext, pc_select, shift_id, jal_id);
+					a_select, b_select, stall, sext, shift_id, jal_id);
 	input	[5:0]	func, op;
 	input	[4:0]	rw_me, rw_ex, rs, rt;
 	input	wreg_me, wreg_ex, m2reg_ex, m2reg_me, equal;
 	input 	clock;
 
 	output	[3:0]	op_id;
-	output	[1:0]	pc_select, a_select, b_select;
+	output	[1:0]	a_select, b_select;
 	output 	wreg_id, m2reg_id, wmem_id, rw_select, aluimm_id;
 	output 	sext, shift_id, jal_id, stall;
 
 	reg		[3:0]	op_id;
-	reg		[1:0]	pc_select, a_select, b_select;
+	reg		[1:0]	a_select, b_select;
 	reg 	wreg_id, m2reg_id, wmem_id, rw_select, aluimm_id;
 	reg 	sext, shift_id, jal_id, stall;
 
 	reg 	use_rt, use_rs;
 	
-	always @(posedge clock) begin
+	always @(op or func or wreg_ex or wreg_me or rw_ex or rw_me or m2reg_ex or m2reg_me or rs or rt) begin
 
 		use_rt = 0;
 		use_rs = 0;
@@ -111,7 +111,7 @@ module stage_id_ex	(clock, wreg_me, rw_me, rw_ex, wreg_ex, m2reg_ex, m2reg_me, e
 		jal_id = 0;
 		stall = 0;
 		op_id = 4'b0000;
-		pc_select = 2'b00;
+		//pc_select = 2'b00;
 		case (op) 
 			6'b000000: begin
 				case (func)
@@ -145,26 +145,26 @@ module stage_id_ex	(clock, wreg_me, rw_me, rw_ex, wreg_ex, m2reg_ex, m2reg_me, e
 						use_rt = 1;		
 						use_rs = 1;				
 					end
-					6'b000000: begin 	// sll
+					6'b000111: begin 	// sll !! Diff with common MIPS code.
 						wreg_id = 1;
 						shift_id = 1;
 						op_id = 4'b0010;
 						use_rt = 1;
 					end
-					6'b100010: begin 	// srl
+					6'b000010: begin 	// srl
 						wreg_id = 1;
 						shift_id = 1;
 						op_id = 4'b1110;
 						use_rt = 1;
 					end
-					6'b100011: begin 	// sra
+					6'b000011: begin 	// sra
 						wreg_id = 1;
 						shift_id = 1;
 						op_id = 4'b1010;
 						use_rt = 1;
 					end
 					6'b001000: begin 	// jr
-						pc_select = 2'b10;
+						//pc_select = 2'b10;
 						use_rs = 1;
 					end
 				endcase
@@ -217,13 +217,13 @@ module stage_id_ex	(clock, wreg_me, rw_me, rw_ex, wreg_ex, m2reg_ex, m2reg_me, e
 				sext = 1;
 				use_rt = 1;
 				use_rs = 1;
-				pc_select = (equal)? 2'b01 : 2'b00;
+				//pc_select = (equal)? 2'b01 : 2'b00;
 			end
 			6'b000101: begin 			// bne
 				sext = 1;
 				use_rt = 1;	
 				use_rs = 1;
-				pc_select = (equal)? 2'b00 : 2'b01;
+				//pc_select = (equal)? 2'b00 : 2'b01;
 			end
 			6'b001111: begin 			// lui
 				wreg_id = 1;
@@ -232,12 +232,12 @@ module stage_id_ex	(clock, wreg_me, rw_me, rw_ex, wreg_ex, m2reg_ex, m2reg_me, e
 				op_id = 4'b1101;
 			end
 			6'b000010: begin 			// j
-				pc_select = 2'b11;
+				//pc_select = 2'b11;
 			end
 			6'b000011: begin 			// jal
 				wreg_id	= 1;
 				jal_id = 1;
-				pc_select = 2'b11;
+				//pc_select = 2'b11;
 			end
 		endcase
 		// bypassing

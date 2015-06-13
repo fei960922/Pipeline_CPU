@@ -27,9 +27,11 @@ module final_test;
 
 	initial begin
 		clock = 0;
-		reset_0 = 0;
-		#8 reset_0 = 1;
     	forever #4 clock = !clock;
+   	end
+   	initial begin
+   		reset_0 = 0;
+		#8 reset_0 = 1;
    	end
    	initial begin
 	  	clock_me = 0;

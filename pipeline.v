@@ -69,6 +69,6 @@ module pipeline (clock, clock_me, reset_0, pc, instr_id, ans_ex, ans_me, ans_wb)
 	// WB
 	reg_mewb 	i 	(clock, reset_0, ans_me, rw_me, wreg_me, m2reg_me, mo_me,
 									 ans_wb, rw_wb, wreg_wb, m2reg_wb, mo_wb);
-	assign data_w = m2reg_wb ? ans_wb : mo_wb;
+	assign data_w = m2reg_wb ? mo_wb : ans_wb;
 
 endmodule
