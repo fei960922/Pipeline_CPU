@@ -257,6 +257,7 @@ module stage_id_ex	(clock, wreg_me, rw_me, rw_ex, wreg_ex, m2reg_ex, m2reg_me, e
 			b_select = 2'b11;
 		stall = wreg_ex & m2reg_ex & (rw_ex != 0) & ((use_rs & (rw_ex == rs)) | (use_rt & (rw_ex == rt)));
 		wmem_id = wmem_id & ~stall;
+		wreg_id = wreg_id & ~stall;
 	end
 
 endmodule
