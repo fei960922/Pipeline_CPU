@@ -17,21 +17,21 @@
 		
 */
 
-module reg_mewb (clock, reset_0, ans_me, rw_me, wreg_me, m2reg_me, mo_me,
-								 ans_wb, rw_wb, wreg_wb, m2reg_wb, mo_wb);
+module reg_mewb (clock, reset_0, ans_me, rw_me, wreg_me, rmem_me, mo_me,
+								 ans_wb, rw_wb, wreg_wb, rmem_wb, mo_wb);
 
 	input	[31:0]	ans_me, mo_me;
 	input 	[4:0]	rw_me;
-	input	wreg_me, m2reg_me;
+	input	wreg_me, rmem_me;
 	input	clock, reset_0;
 
 	output	[31:0]	ans_wb, mo_wb;
 	output 	[4:0]	rw_wb;
-	output	wreg_wb, m2reg_wb;
+	output	wreg_wb, rmem_wb;
 
 	reg 	[31:0]	ans_wb, mo_wb;
 	reg  	[4:0]	rw_wb;
-	reg 	wreg_wb, m2reg_wb;
+	reg 	wreg_wb, rmem_wb;
 
 	always @(negedge reset_0 or posedge clock)
 		if (reset_0 == 0) begin
@@ -39,13 +39,13 @@ module reg_mewb (clock, reset_0, ans_me, rw_me, wreg_me, m2reg_me, mo_me,
 			mo_wb <= 0;
 			rw_wb <= 0;
 			wreg_wb <= 0;
-			m2reg_wb <= 0;
+			rmem_wb <= 0;
 		end else begin
 			ans_wb <= ans_me;
 			mo_wb <= mo_me;
 			rw_wb <= rw_me;
 			wreg_wb <= wreg_me;
-			m2reg_wb <= m2reg_me;
+			rmem_wb <= rmem_me;
 		end
 
 endmodule

@@ -23,19 +23,15 @@ module final_test;
 	reg 	[7:0] 	reg1;
 	integer file;
 
-	pipeline p (clock, clock_me, reset_0, pc, instr_id, ans_ex, ans_me, ans_wb);
+	pipeline p (clock, reset_0, pc, instr_id, ans_ex, ans_me, ans_wb);
 
 	initial begin
 		clock = 0;
-    	forever #4 clock = !clock;
+    	forever #1 clock = !clock;
    	end
    	initial begin
    		reset_0 = 0;
 		#8 reset_0 = 1;
    	end
-   	initial begin
-	  	clock_me = 0;
-	    forever #4 clock_me = !clock_me;
-	end
 
 endmodule

@@ -17,43 +17,43 @@
 		
 */
 
-module mem_simple(clock_me, pc, wmem, in, out);
+module mem_simple(clock_me, addr, wmem, data_in, data_out);
 
-	input 	[31:0]	pc, in;
+	input 	[31:0]	addr, data_in;
 	input	clock_me, wmem;
-	output	[31:0]	out;
+	output	[31:0]	data_out;
 
-	reg 	[31:0]	memorys[0:1024];
+	reg 	[31:0]	memory[0:1024];
 	integer i, file, file_mips;
 
-	assign out = memorys[pc >> 2];
+	assign data_out = memory[addr >> 2];
 
 	always @(posedge clock_me)
 		if (wmem)
-			memorys[pc] <= in;
+			memory[addr >> 2] <= data_in;
 
 	// For simulate only.
 	initial begin
 		file = $fopen("C:/Programming/ModelSim/examples/Pipeline_CPU/data.txt", "r");
 		file_mips = $fopen("C:/Programming/ModelSim/examples/Pipeline_CPU/mips.txt", "r");
 		for (i = 0; i < 100; i = i + 1) begin
-			memorys[i] = 0;
+			memory[i] = 0;
 		end
 		i = 100;
 		while (!$feof(file)) begin
-			$fscanf(file, "%d", memorys[i]);
+			$fscanf(file, "%d", memory[i]);
 			i = i + 1;
 		end
 		$display("Data load : %d lines", i - 100);
 		i = 0;
 		while (!$feof(file_mips)) begin
-			$fscanf(file_mips, "%b", memorys[i]);
+			$fscanf(file_mips, "%b", memory[i]);
 			i = i + 1;
 			if (i>100) begin
-				$display("Instruction number outbound! (>100 lines is not supported)");
+				$display("Instruction number data_outbound! (>100 lines is not supported)");
 			end
 		end
-		$display("Instruction load : %d lines", i);
+		$display("Inst load : %d lines", i);
 		
 		$fclose(file);
 		$fclose(file_mips);

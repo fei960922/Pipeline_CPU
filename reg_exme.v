@@ -17,21 +17,21 @@
 		
 */
 
-module reg_exme (clock, reset_0, ans_ex, b_ex, rw_ex, wreg_ex, m2reg_ex, wmem_ex,
-								 ans_me, b_me, rw_me, wreg_me, m2reg_me, wmem_me); 
+module reg_exme (clock, reset_0, ans_ex, b_ex, rw_ex, wreg_ex, wmem_ex, rmem_ex,
+								 ans_me, b_me, rw_me, wreg_me, wmem_me, rmem_me); 
 
 	input	[31:0]	ans_ex, b_ex;
 	input 	[4:0]	rw_ex;
-	input	wreg_ex, m2reg_ex, wmem_ex;
+	input	wreg_ex, wmem_ex, rmem_ex;
 	input	clock, reset_0;
 
 	output	[31:0]	ans_me, b_me;
 	output 	[4:0]	rw_me;
-	output	wreg_me, m2reg_me, wmem_me;
+	output	wreg_me, wmem_me, rmem_me;
 
 	reg 	[31:0]	ans_me, b_me;
 	reg  	[4:0]	rw_me;
-	reg 	wreg_me, m2reg_me, wmem_me;
+	reg 	wreg_me, wmem_me, rmem_me;
 
 	always @(negedge reset_0 or posedge clock)
 		if (reset_0 == 0) begin
@@ -39,15 +39,15 @@ module reg_exme (clock, reset_0, ans_ex, b_ex, rw_ex, wreg_ex, m2reg_ex, wmem_ex
 			b_me <= 0;
 			rw_me <= 0;
 			wreg_me <= 0;
-			m2reg_me <= 0;
 			wmem_me <= 0;
+			rmem_me <= 0;
 		end else begin
 			ans_me <= ans_ex;
 			b_me <= b_ex;
 			rw_me <= rw_ex;
 			wreg_me <= wreg_ex;
-			m2reg_me <= m2reg_ex;
 			wmem_me <= wmem_ex;
+			rmem_me <= rmem_ex;
 		end
 
 endmodule
