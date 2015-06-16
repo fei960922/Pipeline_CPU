@@ -270,11 +270,15 @@
 	],
 	"file_history":
 	[
-		"/C/Programming/ModelSim/examples/Pipeline_CPU/mips.txt",
-		"/C/Programming/ModelSim/examples/Pipeline_CPU/pipeline.v",
 		"/C/Programming/ModelSim/examples/Pipeline_CPU/mem_advanced.v",
-		"/C/Programming/ModelSim/examples/Pipeline_CPU/readme.md",
+		"/C/Programming/ModelSim/examples/Pipeline_CPU/pipeline.v",
+		"/C/Programming/ModelSim/examples/Pipeline_CPU/mips.txt",
 		"/C/Programming/ModelSim/examples/Pipeline_CPU/stage_id.v",
+		"/C/Programming/ModelSim/examples/Pipeline_CPU/stage_if.v",
+		"/C/Programming/ModelSim/examples/Pipeline_CPU/stage_ex.v",
+		"/C/Programming/ModelSim/examples/Pipeline_CPU/test.v",
+		"/C/Programming/ModelSim/examples/Pipeline_CPU/readme.md",
+		"/C/Programming/ModelSim/examples/Pipeline_CPU/final_test.v.bak",
 		"/C/Programming/ModelSim/examples/Pipeline_CPU/final_test.v",
 		"/C/Programming/ModelSim/examples/Pipeline_CPU/reg_exme.v",
 		"/C/Programming/ModelSim/examples/Pipeline_CPU/reg_idex.v",
@@ -282,7 +286,6 @@
 		"/C/Programming/ModelSim/examples/Pipeline_CPU/reg_ifid.v",
 		"/C/Programming/ModelSim/examples/Pipeline_CPU/reg_cell.v",
 		"/C/Programming/ModelSim/examples/Pipeline_CPU/mem_simple.v",
-		"/C/Programming/ModelSim/examples/Pipeline_CPU/stage_if.v",
 		"/C/Programming/ModelSim/examples/Pipeline_CPU/stage_me.v",
 		"/C/Users/Jerry Xu/Downloads/Code/Chapter8/ctrl.v",
 		"/C/Users/Jerry Xu/Downloads/Code/Chpater7_3/hilo_reg.v",
@@ -293,7 +296,6 @@
 		"/C/Users/Jerry Xu/Downloads/Code/Chapter9_1/hilo_reg.v",
 		"/C/Programming/RobotCarDemo/app/main - Copy.c",
 		"/C/Programming/RobotCarDemo/app/main.c",
-		"/C/Programming/ModelSim/examples/Pipeline_CPU/stage_ex.v",
 		"/C/Programming/ModelSim/examples/Pipeline_CPU/data.txt",
 		"/C/Programming/ModelSim/examples/tutorials/verilog/libraries/tcounter.v",
 		"/C/Users/Jerry Xu/OneDrive/My Documents/University/Y2-S2/Other/实验室安利.md",
@@ -304,7 +306,6 @@
 		"/C/Programming/ModelSim/examples/Pipeline_CPU/select_4.v",
 		"/C/Programming/ModelSim/examples/Pipeline_CPU/reg_array.v",
 		"/C/Users/Jerry Xu/Documents/My Program/Sublime 3/Data/Packages/Package Control/Package Control.sublime-settings",
-		"/C/Programming/ModelSim/examples/Pipeline_CPU/test.v",
 		"/C/Programming/ModelSim/examples/pipeline/pipeline.v",
 		"/C/Programming/ModelSim/examples/Pipeline_CPU/reg_array",
 		"/C/Programming/PHPnow-1.5.6/main/fei960922.github.io/_posts/2014-10-14-ZYP_Publisher.markdown",
@@ -396,8 +397,7 @@
 		"/C/Users/Jerry Xu/OneDrive/My Documents/University/Y1-S2/PPCA/Exams/1302(C20140731).cpp",
 		"/C/Programming/Compiler/fs_complier-master/runtime.s",
 		"/C/Programming/Compiler/Compiler for Jerry Xu/C programs/3-OJ1210.c",
-		"/C/Programming/Compiler/Compiler for Jerry Xu/report.md",
-		"/C/Users/Jerry Xu/OneDrive/My Documents/University/Y1-S1/程序设计/大作业Fishtank/历史AI及其他/Fishtank.h"
+		"/C/Programming/Compiler/Compiler for Jerry Xu/report.md"
 	],
 	"find":
 	{
@@ -490,6 +490,9 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"1111",
+			"011000",
+			" ",
 			"pc_next",
 			"wmem_id",
 			"b_select",
@@ -614,10 +617,7 @@
 			"memFile",
 			"aluCtr",
 			"funct",
-			"aluOp",
-			"id_",
-			"dl1.misses",
-			"il1.misses"
+			"aluOp"
 		],
 		"highlight": true,
 		"in_selection": false,

@@ -28,11 +28,11 @@ module stage_if (clock_me, pc_select, pc, pc_b, pc_r, pc_j, pc_next, pc4, instr,
 	output	[31:0]	pc_next, pc4, instr;
 	output 	stall_me;
 
-	assign 	pc4 = pc + 4;
+	assign 	pc4 = pc_next + 4;
 	
-	select_4 s4 (pc4, pc_b, pc_r, pc_j, pc_select, pc_next);
+	select_4 s4 (pc + 4, pc_b, pc_r, pc_j, pc_select, pc_next);
 
 	//mem_simple m (clock_me, pc, 1'b0, pc, instr);
-	mem_advanced m (clock_me, pc, 1'b1, 1'b0, pc, instr, stall_me);	
+	mem_advanced m (clock_me, 1'b0, pc_next, 1'b1, 1'b0, pc_next, instr, stall_me);	
 
 endmodule

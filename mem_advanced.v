@@ -24,10 +24,10 @@
 		
 */
 
-module mem_advanced(clock_me, addr, rmem, wmem, data_in, data_out, stall_me);
+module mem_advanced(clock_me, reset_0, addr, rmem, wmem, data_in, data_out, stall_me);
 
 	input 	[31:0]	addr, data_in;
-	input	clock_me, rmem, wmem;
+	input	clock_me, rmem, wmem, reset_0;
 	output	[31:0]	data_out;
 	output reg	stall_me;
 
@@ -41,18 +41,29 @@ module mem_advanced(clock_me, addr, rmem, wmem, data_in, data_out, stall_me);
 	wire 	[16:0]	tags;
 	wire 	[8:0] 	mods;
 	wire 	[3:0]	offs;
-	integer i, file, file_mips;
+	integer i, j, file, file_mips;
 
 	assign tags = addr[31:15];
 	assign mods = addr[14:6];
 	assign offs = addr[5:2];
 	assign data_out = cache[mods][offs];
 
+	always @(reset_0) begin
+		for (i=0;i<512;i=i+1) begin
+			if (cache_dirty[i])
+				for (j=0;j<16;j=j+1) begin
+					memory[{cache_tag[i], i, 4'h0} + j] = cache[i][j];
+					cache[i][j] = 0;
+				end
+			cache_tag[i] = 17'hxxxxx;
+			cache_dirty[i] = 0;
+		end
+	end
 	always @(negedge clock_me) begin
 		stall_me = (tags !== cache_tag[mods]) & (rmem | wmem);
 		if (stall_me & temp) begin
 			temp = 1'b0;
-			#40;			// For debug, use 20 cycle instead.
+			#400;
 			temp = 1'b1;
 			for (i=0;i<16;i=i+1) begin
 				if (cache_dirty[mods])
@@ -67,7 +78,7 @@ module mem_advanced(clock_me, addr, rmem, wmem, data_in, data_out, stall_me);
 			cache_tag[mods] = tags;
 		end	else if (wmem) begin
 			cache[mods][offs] <= data_in;
-			cache_dirty[mods] <= 1'b1;
+			cache_dirty[mods] <= 1'b1; 
 		end
 	end
 	// For simulate only.

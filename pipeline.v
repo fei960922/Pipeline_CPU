@@ -41,9 +41,9 @@
 */
 
 
-module pipeline (clock, reset_0, pc, instr_id, ans_ex, ans_me, ans_wb);
+module pipeline (clock, reset, pc, instr_id, ans_ex, ans_me, ans_wb);
 
-	input 	clock, reset_0;
+	input 	clock, reset;
 	output 	[31:0] 	pc, instr_id, ans_ex, ans_me, ans_wb;
 
 	wire 	[31:0]	pc_b, pc_j, pc_next, pc4_if, pc4_id, pc4_ex, instr_if, instr_id;
@@ -54,7 +54,7 @@ module pipeline (clock, reset_0, pc, instr_id, ans_ex, ans_me, ans_wb);
 	wire	wreg_id, rmem_id, wmem_id, aluimm_id, shift_id, jal_id;
 	wire	wreg_ex, rmem_ex, wmem_ex, aluimm_ex, shift_ex, jal_ex;
 	wire	wreg_me, rmem_me, wmem_me, wreg_wb, rmem_wb;
-	wire 	stall, stall_id, stall_me, stall_if; 
+	wire 	stall, stall_id, stall_me, stall_if, reset_0; 
 
 	// IF
 	reg_cell	a 	(clock, reset_0, ~stall, pc_next, pc);
@@ -74,7 +74,7 @@ module pipeline (clock, reset_0, pc, instr_id, ans_ex, ans_me, ans_wb);
 						  ~stall_me, ans_me, b_me, rw_me, wreg_me, rmem_me, wmem_me); 
 
 	//mem_simple h  (clock, ans_me, wmem_me, b_me, mo_me);
-	mem_advanced h 	(clock, ans_me, rmem_me, wmem_me, b_me, mo_me, stall_me);
+	mem_advanced h 	(clock, reset_0, ans_me, rmem_me, wmem_me, b_me, mo_me, stall_me);
 
 	// WB
 	reg_mewb 	i 	(clock, reset_0, ans_me, rw_me, wreg_me, rmem_me, mo_me,
@@ -82,5 +82,6 @@ module pipeline (clock, reset_0, pc, instr_id, ans_ex, ans_me, ans_wb);
 	
 	assign data_w = rmem_wb ? mo_wb : ans_wb;
 	assign stall = stall_id | stall_me | stall_if;
+	assign reset_0 = reset & (op_id !== 4'b1111);
 
 endmodule

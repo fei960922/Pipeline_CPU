@@ -147,6 +147,12 @@ module stage_id_ex	(clock, wreg_me, rw_me, rw_ex, wreg_ex, rmem_ex, rmem_me, equ
 						use_rt = 1;		
 						use_rs = 1;				
 					end
+					6'b011000: begin 	// mul !! Diff with common MIPS code.
+						wreg_id = 1;
+						op_id = 4'b1000;
+						use_rt = 1;
+						use_rs = 1;
+					end
 					6'b000111: begin 	// sll !! Diff with common MIPS code.
 						wreg_id = 1;
 						shift_id = 1;
@@ -241,6 +247,12 @@ module stage_id_ex	(clock, wreg_me, rw_me, rw_ex, wreg_ex, rmem_ex, rmem_me, equ
 				jal_id = 1;
 				//pc_select = 2'b11;
 			end
+			6'b111111: begin 			// quit !! Diff with common MIPS code.
+				#390;
+				op_id = 4'b1111;
+				#10
+				$stop;
+			end
 		endcase
 		// bypassing
 		a_select = 2'b00;
@@ -277,3 +289,18 @@ endmodule
 		SRL 1110;
 		SRA 1010;
 	*/
+
+module branch_predict(pc, feed_back, in, out);
+
+  input [31:0]  pc;
+  input feed_back, in;
+  output  out;
+  reg   f0, f1;
+
+  assign out = f0;
+  always @(posedge feed_back) begin
+    f0 <= (in == f1) ? in : f0;
+    f1 <= in;
+  end
+
+endmodule
