@@ -61,26 +61,26 @@ module pipeline (clock, reset_0, pc, instr_id, ans_ex, ans_me, ans_wb);
 	stage_if	b 	(clock, pc_select, pc, pc_b, a_id, pc_j, pc_next, pc4_if, instr_if, stall_if);
 	// ID
 	reg_ifid	c 	(clock, reset_0, ~stall, pc4_if, instr_if, pc4_id, instr_id);
-	stage_id	d 	(clock, reset_0, pc4_id, instr_id, data_w, ans_ex, ans_me, mo_me,
+	stage_id	d 	(clock, reset_0, ~stall_me, pc4_id, instr_id, data_w, ans_ex, ans_me, mo_me,
 						rw_ex, rw_me, rw_wb, wreg_ex, wreg_me, wreg_wb, rmem_ex, rmem_me,
 						pc_b, pc_j, a_id, b_id, imm_id, rw_id, op_id, pc_select, 
 						stall_id, wreg_id, rmem_id, wmem_id, aluimm_id, shift_id, jal_id);
 	// EX
 	reg_idex	e 	(clock, reset_0, a_id, b_id, imm_id, pc4_id, rw_id, op_id, wreg_id, rmem_id, wmem_id, aluimm_id, shift_id, jal_id,
-								 	 a_ex, b_ex, imm_ex, pc4_ex, rw_in, op_ex, wreg_ex, rmem_ex, wmem_ex, aluimm_ex, shift_ex, jal_ex);
+						  ~stall_me, a_ex, b_ex, imm_ex, pc4_ex, rw_in, op_ex, wreg_ex, rmem_ex, wmem_ex, aluimm_ex, shift_ex, jal_ex);
 	stage_ex	f 	(op_ex, aluimm_ex, a_ex, b_ex, imm_ex, shift_ex, rw_in, pc4_ex, jal_ex, rw_ex, ans_ex);
 	// ME
 	reg_exme 	g 	(clock, reset_0, ans_ex, b_ex, rw_ex, wreg_ex, rmem_ex, wmem_ex,
-								 	 ans_me, b_me, rw_me, wreg_me, rmem_me, wmem_me); 
+						  ~stall_me, ans_me, b_me, rw_me, wreg_me, rmem_me, wmem_me); 
 
-	mem_simple h  (clock, ans_me, wmem_me, b_me, mo_me);
-	//mem_advanced h 	(clock, ans_me, rmem_me, wmem_me, b_me, mo_me, stall_me);
+	//mem_simple h  (clock, ans_me, wmem_me, b_me, mo_me);
+	mem_advanced h 	(clock, ans_me, rmem_me, wmem_me, b_me, mo_me, stall_me);
 
 	// WB
 	reg_mewb 	i 	(clock, reset_0, ans_me, rw_me, wreg_me, rmem_me, mo_me,
-									 ans_wb, rw_wb, wreg_wb, rmem_wb, mo_wb);
+						  ~stall_me, ans_wb, rw_wb, wreg_wb, rmem_wb, mo_wb);
 	
 	assign data_w = rmem_wb ? mo_wb : ans_wb;
-	assign stall = stall_id;// | stall_me | stall_if;
+	assign stall = stall_id | stall_me | stall_if;
 
 endmodule

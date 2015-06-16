@@ -18,13 +18,13 @@
 */
 
 module reg_idex (clock, reset_0, a_id, b_id, imm_id, pc_id, rw_id, op_id, wreg_id, wmem_id, rmem_id, aluimm_id, shift_id, jal_id,
-								 a_ex, b_ex, imm_ex, pc_ex, rw_ex, op_ex, wreg_ex, wmem_ex, rmem_ex, aluimm_ex, shift_ex, jal_ex); 
+						 enable, a_ex, b_ex, imm_ex, pc_ex, rw_ex, op_ex, wreg_ex, wmem_ex, rmem_ex, aluimm_ex, shift_ex, jal_ex); 
 
 	input	[31:0]	a_id, b_id, imm_id, pc_id;
 	input 	[4:0]	rw_id;
 	input	[3:0]	op_id;
 	input	wreg_id, wmem_id, rmem_id, aluimm_id, shift_id, jal_id;
-	input	clock, reset_0;
+	input	clock, reset_0, enable;
 
 	output	[31:0]	a_ex, b_ex, imm_ex, pc_ex;
 	output 	[4:0]	rw_ex;
@@ -50,7 +50,7 @@ module reg_idex (clock, reset_0, a_id, b_id, imm_id, pc_id, rw_id, op_id, wreg_i
 			aluimm_ex <= 0;
 			shift_ex <= 0;
 			jal_ex <= 0;
-		end else begin
+		end else if (enable) begin
 			a_ex <= a_id;
 			b_ex <= b_id;
 			imm_ex <= imm_id;

@@ -19,7 +19,7 @@
     	According to i5-3317U(Intel Ivy bridge):
     		The L1 cache is 32KB data and 32KB instruction.
     		The block size of it is 64Bytes.
-    	That is equals to 8 words per block and total 512 blocks in each cache.
+    	That is equals to 16 words per block and total 512 blocks in each cache.
     	We use direct-mapping and write-back.
 		
 */
@@ -29,32 +29,35 @@ module mem_advanced(clock_me, addr, rmem, wmem, data_in, data_out, stall_me);
 	input 	[31:0]	addr, data_in;
 	input	clock_me, rmem, wmem;
 	output	[31:0]	data_out;
-	output 	stall_me;
+	output reg	stall_me;
 
 	reg 	[31:0]	memory[0:1024];
 
-	reg		[31:0]	cache[0:512][0:7];
-	reg		[17:0]	cache_tag[0:512];
+	reg		[31:0]	cache[0:512][0:15];
+	reg		[16:0]	cache_tag[0:512];
 	reg				cache_dirty[0:512];
+	reg		temp;
 
-	wire 	[17:0]	tags;
+	wire 	[16:0]	tags;
 	wire 	[8:0] 	mods;
-	wire 	[2:0]	offs;
-	integer i, j, file, file_mips;
+	wire 	[3:0]	offs;
+	integer i, file, file_mips;
 
-	assign tags = addr[31:14];
-	assign mods = addr[13:5];
-	assign offs = addr[4:2];
+	assign tags = addr[31:15];
+	assign mods = addr[14:6];
+	assign offs = addr[5:2];
 	assign data_out = cache[mods][offs];
-	assign stall_me = (tags !== cache_tag[mods]) & (rmem | wmem);
 
-	always @(posedge clock_me) begin
-		if (stall_me) begin
+	always @(negedge clock_me) begin
+		stall_me = (tags !== cache_tag[mods]) & (rmem | wmem);
+		if (stall_me & temp) begin
+			temp = 1'b0;
 			#40;			// For debug, use 20 cycle instead.
-			for (i=0;i<8;i=i+1) begin
+			temp = 1'b1;
+			for (i=0;i<16;i=i+1) begin
 				if (cache_dirty[mods])
-					memory[{cache_tag[mods], mods, 3'b000} + i] = cache[mods][i];
-				cache[mods][i] = memory[{addr[31:5],3'b000} + i];
+					memory[{cache_tag[mods], mods, 4'h0} + i] = cache[mods][i];
+				cache[mods][i] = memory[{addr[31:6], 4'h0} + i];
 			end
 			if (wmem) begin
 				cache[mods][offs] <= data_in;
@@ -69,6 +72,8 @@ module mem_advanced(clock_me, addr, rmem, wmem, data_in, data_out, stall_me);
 	end
 	// For simulate only.
 	initial begin
+		temp = 1'b1;
+
 		file = $fopen("C:/Programming/ModelSim/examples/Pipeline_CPU/data.txt", "r");
 		file_mips = $fopen("C:/Programming/ModelSim/examples/Pipeline_CPU/mips.txt", "r");
 		for (i = 0; i < 100; i = i + 1) begin

@@ -18,12 +18,12 @@
 */
 
 module reg_exme (clock, reset_0, ans_ex, b_ex, rw_ex, wreg_ex, wmem_ex, rmem_ex,
-								 ans_me, b_me, rw_me, wreg_me, wmem_me, rmem_me); 
+						 enable, ans_me, b_me, rw_me, wreg_me, wmem_me, rmem_me); 
 
 	input	[31:0]	ans_ex, b_ex;
 	input 	[4:0]	rw_ex;
 	input	wreg_ex, wmem_ex, rmem_ex;
-	input	clock, reset_0;
+	input	clock, reset_0, enable;
 
 	output	[31:0]	ans_me, b_me;
 	output 	[4:0]	rw_me;
@@ -41,7 +41,7 @@ module reg_exme (clock, reset_0, ans_ex, b_ex, rw_ex, wreg_ex, wmem_ex, rmem_ex,
 			wreg_me <= 0;
 			wmem_me <= 0;
 			rmem_me <= 0;
-		end else begin
+		end else if (enable) begin
 			ans_me <= ans_ex;
 			b_me <= b_ex;
 			rw_me <= rw_ex;

@@ -32,7 +32,7 @@ module stage_if (clock_me, pc_select, pc, pc_b, pc_r, pc_j, pc_next, pc4, instr,
 	
 	select_4 s4 (pc4, pc_b, pc_r, pc_j, pc_select, pc_next);
 
-	mem_simple m (clock_me, pc, 1'b0, pc, instr);
-	//mem_advanced m (clock_me, pc, 1'b1, 1'b0, pc, instr, stall_me);	
+	//mem_simple m (clock_me, pc, 1'b0, pc, instr);
+	mem_advanced m (clock_me, pc, 1'b1, 1'b0, pc, instr, stall_me);	
 
 endmodule

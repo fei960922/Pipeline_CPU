@@ -18,12 +18,12 @@
 */
 
 module reg_mewb (clock, reset_0, ans_me, rw_me, wreg_me, rmem_me, mo_me,
-								 ans_wb, rw_wb, wreg_wb, rmem_wb, mo_wb);
+						 enable, ans_wb, rw_wb, wreg_wb, rmem_wb, mo_wb);
 
 	input	[31:0]	ans_me, mo_me;
 	input 	[4:0]	rw_me;
 	input	wreg_me, rmem_me;
-	input	clock, reset_0;
+	input	clock, reset_0, enable;
 
 	output	[31:0]	ans_wb, mo_wb;
 	output 	[4:0]	rw_wb;
@@ -40,7 +40,7 @@ module reg_mewb (clock, reset_0, ans_me, rw_me, wreg_me, rmem_me, mo_me,
 			rw_wb <= 0;
 			wreg_wb <= 0;
 			rmem_wb <= 0;
-		end else begin
+		end else if (enable) begin
 			ans_wb <= ans_me;
 			mo_wb <= mo_me;
 			rw_wb <= rw_me;

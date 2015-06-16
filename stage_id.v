@@ -31,7 +31,7 @@
 
 */
 
-module stage_id (clock, reset_0, pc4_id, instr_id, data_w, ans_ex, ans_me, mo_me,
+module stage_id (clock, reset_0, stall_me, pc4_id, instr_id, data_w, ans_ex, ans_me, mo_me,
 				rw_ex, rw_me, rw_wb, wreg_ex, wreg_me, wreg_wb, rmem_ex, rmem_me,
 				pc_b, pc_j, a_id, b_id, imm_id, rw_id, op_id, pc_select, 
 				stall, wreg_id, rmem_id, wmem_id, aluimm_id, shift_id, jal_id); 
@@ -39,7 +39,7 @@ module stage_id (clock, reset_0, pc4_id, instr_id, data_w, ans_ex, ans_me, mo_me
 	input	[31:0]	pc4_id, instr_id, data_w, ans_ex, ans_me, mo_me;
 	input	[4:0]	rw_ex, rw_me, rw_wb;
 	input	wreg_ex, wreg_me, wreg_wb, rmem_ex, rmem_me;
-	input	clock, reset_0;
+	input	clock, reset_0, stall_me;
 
 	output	[31:0]	pc_b, pc_j, a_id, b_id, imm_id;
 	output 	[4:0]	rw_id;
@@ -69,7 +69,7 @@ module stage_id (clock, reset_0, pc4_id, instr_id, data_w, ans_ex, ans_me, mo_me
 	assign pc_select[1] = (op[5:1]==5'b00001) | (op == 0 & func ==6'b001000);
 	assign pc_select[0] = (op==6'b000100 & equal) | (op==6'b000101 & ~equal) | (op[5:1]==5'b00001);
 
-	reg_array 	rf	(~clock, reset_0, wreg_wb, rs, rt, rw_wb, data_w, data_a, data_b);
+	reg_array 	rf	(~clock, reset_0, wreg_wb & stall_me, rs, rt, rw_wb, data_w, data_a, data_b);
 	select_4 alu_a	(data_a, ans_ex, ans_me, mo_me, a_select, a_id);
 	select_4 alu_b	(data_b, ans_ex, ans_me, mo_me, b_select, b_id);
 	stage_id_ex ex  (clock, wreg_me, rw_me, rw_ex, wreg_ex, rmem_ex, rmem_me, equal, func,
