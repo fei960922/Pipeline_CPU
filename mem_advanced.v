@@ -63,7 +63,7 @@ module mem_advanced(clock_me, reset_0, addr, rmem, wmem, data_in, data_out, stal
 		stall_me = (tags !== cache_tag[mods]) & (rmem | wmem);
 		if (stall_me & temp) begin
 			temp = 1'b0;
-			#400;
+			#400; // When debugging, use 20 cycle instead.
 			temp = 1'b1;
 			for (i=0;i<16;i=i+1) begin
 				if (cache_dirty[mods])
@@ -95,7 +95,7 @@ module mem_advanced(clock_me, reset_0, addr, rmem, wmem, data_in, data_out, stal
 		end
 		i = 100;
 		while (!$feof(file)) begin
-			$fscanf(file, "%d", memory[i]);
+			$fscanf(file, "%h", memory[i]);
 			i = i + 1;
 		end
 		$display("Data load : %d lines", i - 100);

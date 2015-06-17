@@ -28,7 +28,7 @@ module reg_cell (clock, reset_0, enable, data_in, data);
 
 	always @(negedge reset_0 or posedge clock)
 		if (reset_0 == 0) begin
-			data <= 0;
+			data <= 32'hFFFFFFFC;
 		end else begin
 			if (enable) data <= data_in;
 		end

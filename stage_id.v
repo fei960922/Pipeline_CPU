@@ -28,46 +28,60 @@
     		shift: 		1 = ALU a used for shift; 0 = register;
     		aluimm 		1 = ALU b use imm.; 0 = register;
 
+    	Branch Predictor variable:
+
+    		bp_taken_id 	Out of predictor;
+    		bp_taken_ex 	Whether pervious branch should be taken or not.
+    		bp_isbranch_id 	Whether current instr. is branch or not;
+    		bp_isbranch_ex  Whether pervious instr. is branch or not;
+    		bp_isbeq_id		Whether current instr. is jump if equal or not;
+    		bp_succ_ex 		True if predict success.
+    		pc_bf 			pc if predict failed.
 
 */
 
 module stage_id (clock, reset_0, stall_me, pc4_id, instr_id, data_w, ans_ex, ans_me, mo_me,
 				rw_ex, rw_me, rw_wb, wreg_ex, wreg_me, wreg_wb, rmem_ex, rmem_me,
+				bp_taken_ex, bp_succ_ex, bp_isbranch_ex, bp_taken_id, bp_isbeq_id, bp_isbranch_id,
 				pc_b, pc_j, a_id, b_id, imm_id, rw_id, op_id, pc_select, 
 				stall, wreg_id, rmem_id, wmem_id, aluimm_id, shift_id, jal_id); 
 
 	input	[31:0]	pc4_id, instr_id, data_w, ans_ex, ans_me, mo_me;
 	input	[4:0]	rw_ex, rw_me, rw_wb;
-	input	wreg_ex, wreg_me, wreg_wb, rmem_ex, rmem_me;
+	input	wreg_ex, wreg_me, wreg_wb, rmem_ex, rmem_me, bp_taken_ex, bp_succ_ex, bp_isbranch_ex;
 	input	clock, reset_0, stall_me;
 
 	output	[31:0]	pc_b, pc_j, a_id, b_id, imm_id;
 	output 	[4:0]	rw_id;
 	output	[3:0]	op_id;
 	output	[1:0]	pc_select;
-	output	stall, wreg_id, rmem_id, wmem_id, aluimm_id, shift_id, jal_id;
+	output	stall, wreg_id, rmem_id, wmem_id, aluimm_id, shift_id, jal_id, bp_taken_id, bp_isbeq_id, bp_isbranch_id;
 
-	wire	[31:0]	data_a, data_b, br;
+	wire	[31:0]	data_a, data_b, pc_bf, instr_true;
 	wire	[5:0]	op, func;
 	wire	[4:0]	rs, rt, rd;
 	wire	[1:0]	a_select, b_select;
-	wire	rw_select, sext, equal;
+	wire	rw_select, sext, bp_reset;
 
-	assign op = instr_id[31:26];
-	assign rs = instr_id[25:21];
-	assign rt = instr_id[20:16];
-	assign rd = instr_id[15:11];
-	assign func = instr_id[5:0];
+	assign instr_true = instr_id & {32{bp_reset}};
+	assign op = instr_true[31:26];
+	assign rs = instr_true[25:21];
+	assign rt = instr_true[20:16];
+	assign rd = instr_true[15:11];
+	assign func = instr_true[5:0];
 
-	assign pc_j = {pc4_id[31:28], instr_id[25:0], 2'b00};
 	assign rw_id = rw_select?rt:rd;
-	assign equal = a_id==b_id; //~|(a_id^b_id);	
-	assign imm_id = {{16{sext & instr_id[15]}}, instr_id[15:0]};	
-	assign br = {imm_id[29:0], 2'b00};
-	assign pc_b = pc4_id + br;
+	assign imm_id = {{16{sext & instr_true[15]}}, instr_true[15:0]};
 
+	assign pc_j = {pc4_id[31:28], instr_true[25:0], 2'b00};
+	assign pc_b = (bp_reset) ? (pc4_id + {imm_id[29:0], 2'b00}) : pc_bf;
+	
+	assign bp_isbranch_id = (op==6'b000100 | op==6'b000101);
+	assign bp_isbeq_id = (op==6'b000100);
+	assign bp_reset = (~bp_isbranch_ex) | bp_succ_ex;
 	assign pc_select[1] = (op[5:1]==5'b00001) | (op == 0 & func ==6'b001000);
-	assign pc_select[0] = (op==6'b000100 & equal) | (op==6'b000101 & ~equal) | (op[5:1]==5'b00001);
+	assign pc_select[0] = (op==6'b000100 & bp_taken_id) | (op==6'b000101 & bp_taken_id) | (op[5:1]==5'b00001) | (~bp_reset);
+	branch_predict b(clock, reset_0, instr_id, bp_isbranch_id, pc4_id, pc_b, bp_isbranch_ex, bp_taken_ex, bp_taken_id, pc_bf);
 
 	reg_array 	rf	(~clock, reset_0, wreg_wb & stall_me, rs, rt, rw_wb, data_w, data_a, data_b);
 	select_4 alu_a	(data_a, ans_ex, ans_me, mo_me, a_select, a_id);
@@ -116,65 +130,28 @@ module stage_id_ex	(clock, wreg_me, rw_me, rw_ex, wreg_ex, rmem_ex, rmem_me, equ
 		//pc_select = 2'b00;
 		case (op) 
 			6'b000000: begin
+				if (func==6'b001000) begin		// jr
+					//pc_select = 2'b10;
+					use_rs = 1;
+				end else if (func[5]==1) begin 	// normal_alu
+					wreg_id = 1;
+					use_rt = 1;
+					use_rs = 1;
+				end else begin 					// shifts
+					wreg_id = 1;
+					shift_id = 1;
+					use_rt = 1;
+				end
 				case (func)
-					6'b100000: begin 	// add
-						wreg_id = 1;
-						op_id = 4'b0000;
-						use_rt = 1;
-						use_rs = 1;
-					end
-					6'b100010: begin 	// sub
-						wreg_id = 1;
-						op_id = 4'b0100;
-						use_rt = 1;
-						use_rs = 1;
-					end
-					6'b100100: begin 	// and
-						wreg_id = 1;
-						op_id = 4'b0001;
-						use_rt = 1;	
-						use_rs = 1;					
-					end
-					6'b100101: begin 	// or
-						wreg_id = 1;
-						op_id = 4'b0101;
-						use_rt = 1;	
-						use_rs = 1;					
-					end
-					6'b100110: begin 	// xor
-						wreg_id = 1;
-						op_id = 4'b1001;
-						use_rt = 1;		
-						use_rs = 1;				
-					end
-					6'b011000: begin 	// mul !! Diff with common MIPS code.
-						wreg_id = 1;
-						op_id = 4'b1000;
-						use_rt = 1;
-						use_rs = 1;
-					end
-					6'b000111: begin 	// sll !! Diff with common MIPS code.
-						wreg_id = 1;
-						shift_id = 1;
-						op_id = 4'b0010;
-						use_rt = 1;
-					end
-					6'b000010: begin 	// srl
-						wreg_id = 1;
-						shift_id = 1;
-						op_id = 4'b1110;
-						use_rt = 1;
-					end
-					6'b000011: begin 	// sra
-						wreg_id = 1;
-						shift_id = 1;
-						op_id = 4'b1010;
-						use_rt = 1;
-					end
-					6'b001000: begin 	// jr
-						//pc_select = 2'b10;
-						use_rs = 1;
-					end
+					6'b100000: op_id = 4'b0000;	// add						
+					6'b100010: op_id = 4'b0100;	// sub						
+					6'b100100: op_id = 4'b0001;	// and						
+					6'b100101: op_id = 4'b0101;	// or						
+					6'b100110: op_id = 4'b1001;	// xor						
+					6'b111000: op_id = 4'b1000;	// mul !! Diff with common MIPS code.						
+					6'b000111: op_id = 4'b0010;	// sll !! Diff with common MIPS code.
+					6'b000010: op_id = 4'b1110;	// srl
+					6'b000011: op_id = 4'b1010;	// sra
 				endcase
 			end
 			6'b001000: begin 			// addi
@@ -225,13 +202,13 @@ module stage_id_ex	(clock, wreg_me, rw_me, rw_ex, wreg_ex, rmem_ex, rmem_me, equ
 				sext = 1;
 				use_rt = 1;
 				use_rs = 1;
-				//pc_select = (equal)? 2'b01 : 2'b00;
+				//if (bp_taken_id) pc_select = 2'b01;
 			end
 			6'b000101: begin 			// bne
 				sext = 1;
 				use_rt = 1;	
 				use_rs = 1;
-				//pc_select = (equal)? 2'b00 : 2'b01;
+				//if (bp_taken_id) pc_select = 2'b01;
 			end
 			6'b001111: begin 			// lui
 				wreg_id = 1;
@@ -290,17 +267,31 @@ endmodule
 		SRA 1010;
 	*/
 
-module branch_predict(pc, feed_back, in, out);
+module 	branch_predict	(clock, reset_0, pc_now, bp_isbranch_id, pc4, pc_b, 
+						 bp_isbranch_ex, bp_taken_ex, f0, pc_bf);
 
-  input [31:0]  pc;
-  input feed_back, in;
-  output  out;
-  reg   f0, f1;
+	input	[31:0]		pc_now, pc4, pc_b;
+	input 				clock, reset_0, bp_isbranch_ex, bp_isbranch_id, bp_taken_ex;
+	output reg	[31:0] 	pc_bf;
+	output reg 			f0;
+	reg   				f1;
 
-  assign out = f0;
-  always @(posedge feed_back) begin
-    f0 <= (in == f1) ? in : f0;
-    f1 <= in;
-  end
+	always @(negedge reset_0 or posedge clock) begin
+		if (reset_0 == 0) begin
+			f0 <= 1;
+			f1 <= 1;
+		end else begin
+			if (bp_isbranch_id)
+				pc_bf <= (f0) ? pc4 : pc_b;
+			if (bp_isbranch_ex) begin
+				f0 <= (bp_taken_ex == f1) ? bp_taken_ex : f0;
+				f1 <= bp_taken_ex;
+			end
+		end
+	end
 
 endmodule
+
+
+	//assign equal = a_id==b_id; // Note: Historically used for branch direct jump.	
+	//	branch_predict	(reset_0, pc_now, bp_isbranch_id, pc4, pc_b, bp_isbranch_ex, bp_taken_ex, bp_taken_id, pc_bf);

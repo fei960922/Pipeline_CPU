@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"bp_is",
+				"bp_isbranch_ex"
+			],
+			[
+				"bp_isbranch",
+				"bp_isbranch_id"
+			],
+			[
 				"cache",
 				"cache_dirty"
 			],
@@ -195,6 +203,14 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "mem_advanced.v",
+			"settings":
+			{
+				"buffer_size": 2921,
+				"line_ending": "Windows"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -270,21 +286,22 @@
 	],
 	"file_history":
 	[
-		"/C/Programming/ModelSim/examples/Pipeline_CPU/mem_advanced.v",
-		"/C/Programming/ModelSim/examples/Pipeline_CPU/pipeline.v",
+		"/C/Programming/ModelSim/examples/Pipeline_CPU/reg_ifid.v",
 		"/C/Programming/ModelSim/examples/Pipeline_CPU/mips.txt",
+		"/C/Programming/ModelSim/examples/Pipeline_CPU/reg_cell.v",
+		"/C/Programming/ModelSim/examples/Pipeline_CPU/reg_idex.v",
+		"/C/Programming/ModelSim/examples/Pipeline_CPU/mem_advanced.v",
 		"/C/Programming/ModelSim/examples/Pipeline_CPU/stage_id.v",
-		"/C/Programming/ModelSim/examples/Pipeline_CPU/stage_if.v",
+		"/C/Programming/ModelSim/examples/Pipeline_CPU/pipeline.v",
 		"/C/Programming/ModelSim/examples/Pipeline_CPU/stage_ex.v",
-		"/C/Programming/ModelSim/examples/Pipeline_CPU/test.v",
 		"/C/Programming/ModelSim/examples/Pipeline_CPU/readme.md",
+		"/C/Users/Jerry Xu/Downloads/play/main.v",
+		"/C/Programming/ModelSim/examples/Pipeline_CPU/stage_if.v",
+		"/C/Programming/ModelSim/examples/Pipeline_CPU/test.v",
 		"/C/Programming/ModelSim/examples/Pipeline_CPU/final_test.v.bak",
 		"/C/Programming/ModelSim/examples/Pipeline_CPU/final_test.v",
 		"/C/Programming/ModelSim/examples/Pipeline_CPU/reg_exme.v",
-		"/C/Programming/ModelSim/examples/Pipeline_CPU/reg_idex.v",
 		"/C/Programming/ModelSim/examples/Pipeline_CPU/reg_mewb.v",
-		"/C/Programming/ModelSim/examples/Pipeline_CPU/reg_ifid.v",
-		"/C/Programming/ModelSim/examples/Pipeline_CPU/reg_cell.v",
 		"/C/Programming/ModelSim/examples/Pipeline_CPU/mem_simple.v",
 		"/C/Programming/ModelSim/examples/Pipeline_CPU/stage_me.v",
 		"/C/Users/Jerry Xu/Downloads/Code/Chapter8/ctrl.v",
@@ -396,8 +413,7 @@
 		"/C/Users/Jerry Xu/OneDrive/My Documents/University/Y1-S2/PPCA/Exams/1308(C20140808).cpp",
 		"/C/Users/Jerry Xu/OneDrive/My Documents/University/Y1-S2/PPCA/Exams/1302(C20140731).cpp",
 		"/C/Programming/Compiler/fs_complier-master/runtime.s",
-		"/C/Programming/Compiler/Compiler for Jerry Xu/C programs/3-OJ1210.c",
-		"/C/Programming/Compiler/Compiler for Jerry Xu/report.md"
+		"/C/Programming/Compiler/Compiler for Jerry Xu/C programs/3-OJ1210.c"
 	],
 	"find":
 	{
@@ -490,6 +506,16 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"reg_cell",
+			"br",
+			"clock",
+			"pc_select",
+			"bp",
+			"reset_b",
+			"bp_succ",
+			"predicted_ex",
+			"wreg_id = 1;\n						shift_id = 1;\n						op_id = ",
+			"wreg_id = 1;\n						op_id = ",
 			"1111",
 			"011000",
 			" ",
@@ -607,17 +633,7 @@
 			"_id <= 0;",
 			"_id",
 			"input",
-			"_in",
-			"intrs",
-			";",
-			" ;",
-			";",
-			"wlre",
-			"data_w = ",
-			"memFile",
-			"aluCtr",
-			"funct",
-			"aluOp"
+			"_in"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -638,14 +654,45 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "mem_advanced.v",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2921,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2570,
+								2570
+							]
+						],
+						"settings":
+						{
+							"origin_encoding": "ASCII",
+							"syntax": "Packages/Verilog/Verilog.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": -0.0,
+						"translation.y": 936.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
 			]
 		}
 	],
 	"incremental_find":
 	{
-		"height": 33.0
+		"height": 32.0
 	},
 	"input":
 	{
@@ -686,7 +733,7 @@
 	"project": "pipeline.sublime-project",
 	"replace":
 	{
-		"height": 62.0
+		"height": 60.0
 	},
 	"save_all_on_build": true,
 	"select_file":
