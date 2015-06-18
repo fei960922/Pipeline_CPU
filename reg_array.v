@@ -15,6 +15,7 @@
 
 	Version:
         0.1     2015/6/6    Version Alpha;
+        0.2 	2015/6/9	Version final;
 		
 */
 

@@ -33,6 +33,19 @@ This project is a final project of Computer System (1) by Xiaoyao Liang in Sprin
 
 The requiry of the project is : [Project requiry](http://www.cs.sjtu.edu.cn/~liang-xy/ms108/project.pdf)
 
+The C++ code runs is :
+
+	int main() {
+		int e = 200;
+		int ans = 0;
+		do {
+			int x = memory[i];
+			i++;
+			ans += x;
+		} while (i != 200)
+		memory[e] = ans;
+	}
+
 The mips code runs is :
 
 	ori $10, $0, 800
@@ -105,4 +118,53 @@ Computer Architecture Experiment Instruction (LAB1-6)  (Download: Restricted)
 Verilog for Ditigal Circuits  [Download](http://www.cs.sjtu.edu.cn/~liang-xy/ms108/Verilog%20for%20Ditigal%20Circuits.pdf)
 
 Thanks to: Many Guys.
+
+## Reports
+
+### Branch Prediction
+
+Traditionally, branch instruction should be done in EX stage because we won't know whether we take the branch or not before we compare the conditions in EX stage. Stall will happened until the branch is complete, which makes our pipeline too slow. 
+
+A 2-bit global branch prediction is added into our design. 
+
+When we face a branch instruction(That is 'bp_isbranch_id' == 1). We will do following:
+
+(1) Fetch result from branch prediction(The result is 'bp_taken_id').
+
+	if the prediction result is TAKEN: Let pc_select = 2'b01 which mean pc_b will be selected;
+	Otherwise, pc_select = 2'b00 which mean pc4 will be selected;
+
+(2) Storage another PC into the branch prediction.
+
+	if prediction result is TAKEN, storage pc4.
+	Otherwise, storage pc_b instead.
+
+(3) Transmit 'bp_taken_id', 'bp_isbeq_id', 'bp_isbranch_id' to EX stage.
+
+*** Next cycle ***
+
+(4) In EX stage, we calculate the condition and output these:
+
+	bp_taken_ex = ((a_ex == b_ex) ^ bp_isbeq_ex); 	// Whether this branch should be TAKEN.
+	bp_succ_ex = ~(bp_taken_ex ^ bp_taken_in);		// Whether this branch is predicted correctlly.
+													// * bp_taken_in is the predict result.
+
+	These wire will be linked to ID stage.
+
+(5) Decide whether the new instruction in ID stage is correct or not.
+
+	bp_reset = (~bp_isbranch_ex) | bp_succ_ex; 		// If the previous instruction is a branch and its prediction failed.
+
+	If the prediction is failed (bp_reset==0):
+
+		a) Clean the current instruction because it is a wrong one. 
+
+			instr_true = instr_id & {32{bp_reset}};
+
+		b) Modify next pc to a correct one. Notice another PC we storage in the branch prediction is a correct one.
+
+			pc_b = (bp_reset) ? (pc4_id + {imm_id[29:0], 2'b00}) : pc_bf; 	// pc_bf is the storaged PC.
+			if (bp_reset) pc_select = 2'b01; 								// We transmit this PC by pc_b.
+	
+	Whatever the prediction is success or not, we should give the branch prediction a feedback. 'bp_taken_ex' is transmitted to the branch prediction.
 

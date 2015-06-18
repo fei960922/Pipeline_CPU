@@ -22,7 +22,6 @@
     			which represent using in each stage. (only few of them used transitive)
     	name :
 			wreg: Writing Register or not;
-			regrt	
 
     	Special name:
     		clock	: 	CPU clock;

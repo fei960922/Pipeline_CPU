@@ -14,6 +14,8 @@
 
 	Version:
         0.1     2015/6/14    Struct established;
+        0.2 	2015/6/16 	 Bug fixed;
+        1.0 	2015/6/18 	 Finished;
 
     Note:
     	According to i5-3317U(Intel Ivy bridge):
